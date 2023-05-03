@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 10.0.0, 2023-04-25T16:04:55. -->
+<!-- Written by QtCreator 10.0.0, 2023-05-03T13:05:54. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -164,6 +164,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">ElectionStatistic</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.ElectionStatistic</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">ElectionStatistic</value>
+    <value type="QString" key="RunConfiguration.Arguments">--docroot=docroot --http-address=192.168.0.31 --http-port=8080 --approot=approot</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
