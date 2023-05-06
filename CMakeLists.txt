@@ -9,6 +9,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
 set(bsoncxx_DIR C:/Mongo/mongo-msvc2022x64-noBoost/lib/cmake/bsoncxx-3.7.0)
 set(mongocxx_DIR C:/Mongo/mongo-msvc2022x64-noBoost/lib/cmake/mongocxx-3.7.0)
 
+#find_package(Qt6 6.2 COMPONENTS Core Gui Xml Widgets REQUIRED)
 
 
 file(GLOB_RECURSE HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
@@ -35,6 +36,7 @@ include_directories(${LIBBSONCXX_INCLUDE_DIR})
 target_link_libraries(ElectionStatistic PRIVATE mongo::bsoncxx_shared)
 target_link_libraries(ElectionStatistic PRIVATE mongo::mongocxx_shared)
 
+#target_link_libraries(ElectionStatistic PRIVATE Qt6::Core Qt6::Gui Qt::Xml Qt::Widgets )
 
 set(Wt_DIR C:/Wt_4.7.0_msvs2022_x64/lib/cmake/wt)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "C:/Wt_4.7.0_msvs2022_x64/lib/cmake/wt")
