@@ -44,7 +44,6 @@ MainApplication::MainApplication(const Wt::WEnvironment &env)
 
     WApplication::useStyleSheet(WLink("newDialog.css"));
 
-
     mTotalVoteWidget = root()->addNew<TotalVoteWidget>();
     mTotalVoteWidget->addStyleClass(Bootstrap::Grid::col_full_12);
 
@@ -56,9 +55,7 @@ MainApplication::MainApplication(const Wt::WEnvironment &env)
         }
     }
 
-
     if( mapList.contains("telefon") ){
-
 
         mSandikManagerWidget = root()->addNew<Sandik::ListItemWidget>();
         mSandikManagerWidget->mTelefonNumarasi = mapList["telefon"];
@@ -74,8 +71,6 @@ MainApplication::MainApplication(const Wt::WEnvironment &env)
 
         mSandikManagerWidget->UpdateList(filter);
 
-//        mSandikManagerWidget->mTimer->start();
-
     }else{
 
         mSandikManagerWidget = root()->addNew<Sandik::ListItemWidget>(true);
@@ -83,13 +78,10 @@ MainApplication::MainApplication(const Wt::WEnvironment &env)
         mSandikManagerWidget->addStyleClass(Bootstrap::Grid::col_full_12);
         mSandikManagerWidget->setMargin(10,Wt::Side::Top);
         mSandikManagerWidget->setLimit(500);
+        mSandikManagerWidget->UpdateList();
+
 
         mSandikManagerWidget->_Changed.connect(mTotalVoteWidget,&TotalVoteWidget::updatePercent);
-
-
-        mSandikManagerWidget->mTimer->start();
-
-
 
         auto controllerWidget = root()->addNew<ControllerWidget>();
         controllerWidget->addStyleClass(Bootstrap::Grid::col_full_12);
@@ -97,9 +89,11 @@ MainApplication::MainApplication(const Wt::WEnvironment &env)
             if( controllerWidget->mStopAutoChangeButton->text() == "Durdur" ){
                 controllerWidget->mStopAutoChangeButton->setText("Kaydır");
                 mSandikManagerWidget->mAutoChange = false;
+                mTimer->stop();
             }else{
                 controllerWidget->mStopAutoChangeButton->setText("Durdur");
                 mSandikManagerWidget->mAutoChange = true;
+                mTimer->start();
             }
 
         });
@@ -112,9 +106,36 @@ MainApplication::MainApplication(const Wt::WEnvironment &env)
 
         });
 
+        mTimer = addChild(std::make_unique<Wt::WTimer>());
+        mTimer->setInterval(std::chrono::seconds(1));
+        mTimer->timeout().connect(this, [=](){
+
+            mSandikManagerWidget->Sayac++;
+
+            if( mSandikManagerWidget->Sayac >=3 && mSandikManagerWidget->mAutoChange ){
+                mSandikManagerWidget->Sayac = 0;
+                mSandikManagerWidget->mSkip += 25;
+                if( mSandikManagerWidget->mSkip > mSandikManagerWidget->mMahalleler.size() ) mSandikManagerWidget->mSkip = 0;
+
+                if( mSandikManagerWidget->mTelefonNumarasi.size() ){
+
+                }else{
+                    mSandikManagerWidget->UpdateList();
+                }
+
+            }
+
+        });
+        mTimer->start();
+
+
+
 
 
     }
+
+
+
 
 
 

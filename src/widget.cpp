@@ -213,33 +213,8 @@ ListItemWidget::ListItemWidget(const bool &listByMahalle)
     mListByMahalle = listByMahalle;
     this->addStyleClass(Bootstrap::Grid::col_full_12);
 
-    mTimer = addChild(std::make_unique<Wt::WTimer>());
-    mTimer->setInterval(std::chrono::seconds(1));
-    mTimer->timeout().connect(this, [=](){
-
-        _Changed.emit(NoClass());
-
-        Sayac++;
-
-        if( Sayac >=3 && mAutoChange ){
-            Sayac = 0;
-            mSkip += 25;
-            if( mSkip > mMahalleler.size() ) mSkip = 0;
-
-            if( mTelefonNumarasi.size() ){
-
-            }else{
-                this->UpdateList();
-            }
-
-        }
-
-    });
-
-
     mContent = addWidget(cpp14::make_unique<WContainerWidget>());
     mContent->addStyleClass(Bootstrap::Grid::col_full_12);
-
 
 }
 
@@ -293,7 +268,6 @@ void ListItemWidget::setSandikValue(const Widget *oldItem)
             this->removeDialog(mDialog);
             _Changed.emit(NoClass());
         }else{
-            std::cout << "Can Not Update: " << this->getLastError() <<"\n";
 
         }
 
@@ -316,7 +290,6 @@ void ListItemWidget::ListByMahalle(const std::vector<Sandik> &mlist)
         }
     }
 
-
     int i = 0;
     for( const auto &item : mMahalleler ){
 
@@ -333,25 +306,14 @@ void ListItemWidget::ListByMahalle(const std::vector<Sandik> &mlist)
                     diger += (_item.getDiger());
                 }
             }
-//            mahalleWidget->setVoteRate(rte,mi,kk,so,diger);
-            mahalleWidget->setVoteRate(getRandom(),getRandom(),getRandom(),getRandom(),getRandom());
+            mahalleWidget->setVoteRate(rte,mi,kk,so,diger);
+//            mahalleWidget->setVoteRate(getRandom(),getRandom(),getRandom(),getRandom(),getRandom());
 
             mahalleWidget->clicked().connect([=](){
-
-
-                mTimer->stop();
                 mAutoChange = false;
-
                 auto mDialog = createFlatDialog(mahalleWidget->mMahalleName);
-
-
-
-                std::cout << "MAhalle: " << mahalleWidget->mMahalleName << "\n";
-
-
                 auto content = mDialog->Content()->addWidget(cpp14::make_unique<WContainerWidget>());
                 content->addStyleClass(Bootstrap::Grid::col_full_12);
-
                 Sandik filter;
                 filter.setMahalle(mahalleWidget->mMahalleName);
 
@@ -360,10 +322,6 @@ void ListItemWidget::ListByMahalle(const std::vector<Sandik> &mlist)
 
                 auto list = this->List(filter,options);
 
-
-//                auto container = content->addWidget(cpp14::make_unique<WContainerWidget>());
-//                container->addStyleClass(Bootstrap::Grid::col_full_12);
-//                container->addWidget(cpp14::make_unique<WText>(mahalleItem.getMahalle()));
                 auto gLayout = content->setLayout(cpp14::make_unique<WGridLayout>());
 
                 gLayout->addWidget(cpp14::make_unique<WText>("<b>Sandık</b>"),0,0,AlignmentFlag::Left);
@@ -404,29 +362,15 @@ void ListItemWidget::ListByMahalle(const std::vector<Sandik> &mlist)
                 gLayout->addWidget(cpp14::make_unique<WText>("<b>"+std::to_string(SO)+"</b>"),i,4,AlignmentFlag::Center);
                 gLayout->addWidget(cpp14::make_unique<WText>("<b>"+std::to_string(DIGER)+"</b>"),i,5,AlignmentFlag::Center);
 
-
-
-
                 mDialog->Accepted().connect([=](){
-
-
-mTimer->start();
                     removeDialog(mDialog);
                 });
-
 
                 mDialog->Rejected().connect([=](){
-
-
-                                    mTimer->start();
                     removeDialog(mDialog);
                 });
 
-
                 mDialog->show();
-
-
-
 
             });
         }
@@ -451,7 +395,6 @@ MahalleWidget::MahalleWidget( const std::string &mahalleName )
                   Bootstrap::Grid::Small::col_sm_4+
                   Bootstrap::Grid::ExtraSmall::col_xs_6);
 
-//    mContent->addStyleClass(Bootstrap::ImageShape::img_rounded);
     mContent->setAttributeValue(Style::style,Style::background::color::rgb(240,240,240));
     mContent->setMargin(3,Side::Bottom);
     mContent->setHeight(100);
@@ -484,8 +427,6 @@ MahalleWidget::MahalleWidget( const std::string &mahalleName )
         soText = text;
         soWidgetBar->setOffsets(80,Side::Top);
     }
-
-//    mContent->setAttributeValue(Style::style,Style::background::color::rgb(254, 233, 200));
 
 }
 
