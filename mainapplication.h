@@ -11,6 +11,8 @@
 
 #include <mongocore/db.h>
 
+#include "controllerwidget.h"
+
 namespace Sandik {
 class ListItemWidget;
 }
@@ -22,7 +24,6 @@ public:
     MainApplication(const Wt::WEnvironment &env);
 
 
-    void addSandikDialog();
 
 
 private:
@@ -47,5 +48,9 @@ private:
                                                 {"05063347123","ŞK"},
                                                 };
 };
+
+
+
+
 
 #endif // MAINAPPLICATION_H

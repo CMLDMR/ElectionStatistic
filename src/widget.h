@@ -4,10 +4,11 @@
 
 
 #include <Wt/WContainerWidget.h>
+#include <Wt/WTimer.h>
 #include <mongocore/listitem.h>
 #include <mongocore/item.h>
 #include <type_traits>
-
+#include <set>
 #include "src/containerwidget.h"
 
 
@@ -17,17 +18,17 @@
 namespace Sandik {
 
 namespace Key {
-enum Key{
-    SandikCollection = 0,
-    sandikno,
-    mahalle,
-    sandikAlanadi,
-    telefon,
-    rte,
-    mi,
-    kk,
-    so
-};
+inline const std::string SandikCollection{"SandikCollection"};
+inline const std::string sandikno{"sandikno"};
+inline const std::string mahalle{"mahalle"};
+inline const std::string sandikAlanadi{"sandikAlanadi"};
+inline const std::string telefon{"telefon"};
+inline const std::string rte{"rte"};
+inline const std::string mi{"mi"};
+inline const std::string kk{"kk"};
+inline const std::string so{"so"};
+inline const std::string diger{"diger"};
+
 }
 
 
@@ -39,34 +40,26 @@ public:
     Sandik& setSandikNo( const std::int32_t &sandikNo );
     Sandik& setMahalle( const std::string &mahalle );
     Sandik& setSandikAlanAdi( const std::string &sandikAlanAdi );
-    Sandik& setrte(const std::int64_t &vote );
-    Sandik& setmi(const int64_t &vote );
-    Sandik& setkk(const std::int64_t &vote );
-    Sandik& setso(const int64_t &vote );
+    Sandik& setrte(const int32_t &vote );
+    Sandik& setmi(const int32_t &vote );
+    Sandik& setkk(const int32_t &vote );
+    Sandik& setso(const int32_t &vote );
+    Sandik& setDiger(const int32_t &vote );
     Sandik& setTelefon( const std::string &telefonNo );
 
 
     std::int32_t getSandikNo() const;
     std::string getMahalle() const;
     std::string getSandikAlanAdi() const;
-    std::int64_t getRTE() const;
-    std::int64_t getMI() const;
-    std::int64_t getKK() const;
-    std::int64_t getSO() const;
+    std::int32_t getRTE() const;
+    std::int32_t getMI() const;
+    std::int32_t getKK() const;
+    std::int32_t getSO() const;
+    std::int32_t getDiger() const;
+
     std::string getTelefon() const;
 
 private:
-
-    auto value( const Key::Key &key ) const{
-        auto val = this->element(std::string(magic_enum::enum_name(key)));
-        return val;
-    }
-
-    template < typename T >
-    Sandik &setValue( const Key::Key &key, const T &value ){
-        this->append(magic_enum::enum_name(key).data(),value);
-        return *this;
-    }
 
 };
 
@@ -79,11 +72,59 @@ public:
 };
 
 
+class MahalleWidget : public ContainerWidget
+{
+public:
+    MahalleWidget(const std::string &mahalleName);
+
+    WContainerWidget* mContent;
+
+    std::tuple<WContainerWidget*,WText*> addBar( const std::string &color);
+
+    void setVoteRate(const int &rte, const int &mi, const int &kk , const int &so , const int &diger);
+    WContainerWidget* rteWidgetBar;
+    WContainerWidget* miWidgetBar;
+    WContainerWidget* kkWidgetBar;
+    WContainerWidget* soWidgetBar;
+
+    WText* rteText;
+    WText* miText;
+    WText* kkText;
+    WText* soText;
+
+    std::string mMahalleName{};
+};
+
+
 
 class ListItemWidget : public MongoCore::ListItem<Sandik>, public ContainerWidget
 {
 public:
-    ListItemWidget();
+    ListItemWidget(const bool &listByMahalle = false);
+
+    void setSandikValue(const Widget *oldItem);
+
+    std::string mTelefonNumarasi{""};
+
+    Signal<NoClass> _Changed;
+
+    void ListByMahalle( const std::vector<Sandik> &mlist );
+
+    bool mListByMahalle{false};
+
+    std::vector<MahalleWidget*> mMahalleWidgetList;
+
+
+    std::set<std::string> mMahalleler;
+
+    int mSkip = 0;
+
+    int Sayac{0};
+    bool mAutoChange{true};
+
+    Wt::WTimer* mTimer;
+
+    WContainerWidget* mContent;
 
     // DB interface
 public:

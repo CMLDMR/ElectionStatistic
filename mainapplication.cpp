@@ -42,58 +42,80 @@ MainApplication::MainApplication(const Wt::WEnvironment &env)
 
     wApp->setTheme(mTheme);
 
+    WApplication::useStyleSheet(WLink("newDialog.css"));
+
+
     mTotalVoteWidget = root()->addNew<TotalVoteWidget>();
     mTotalVoteWidget->addStyleClass(Bootstrap::Grid::col_full_12);
 
-    mSandikManagerWidget = root()->addNew<Sandik::ListItemWidget>();
-    mSandikManagerWidget->addStyleClass(Bootstrap::Grid::col_full_12);
-    mSandikManagerWidget->setMargin(10,Wt::Side::Top);
+    std::map<std::string,std::string> mapList;
+    for (const auto &str : env.getParameterMap() ) {
+        for( const auto &sec : str.second )
+        {
+            mapList[str.first.c_str ()] = sec;
+        }
+    }
 
-    mSandikManagerWidget->clicked().connect(this,&MainApplication::addSandikDialog);
 
-    mSandikManagerWidget->UpdateList();
+    if( mapList.contains("telefon") ){
 
-}
 
-void MainApplication::addSandikDialog()
-{
-    auto mDialog = mSandikManagerWidget->createFlatDialog("Sandık Ekle");
+        mSandikManagerWidget = root()->addNew<Sandik::ListItemWidget>();
+        mSandikManagerWidget->mTelefonNumarasi = mapList["telefon"];
 
-    auto container = mDialog->Content()->addWidget(cpp14::make_unique<WContainerWidget>());
-    container->addStyleClass(Bootstrap::Grid::container_fluid);
+        mSandikManagerWidget->addStyleClass(Bootstrap::Grid::col_full_12);
+        mSandikManagerWidget->setMargin(10,Wt::Side::Top);
+        mSandikManagerWidget->setLimit(500);
 
-    auto gLayout = container->setLayout(cpp14::make_unique<WGridLayout>());
+        mSandikManagerWidget->_Changed.connect(mTotalVoteWidget,&TotalVoteWidget::updatePercent);
 
-    gLayout->addWidget(cpp14::make_unique<WText>("Sandık Alanı"),0,0,AlignmentFlag::Center);
-    auto alanAdiLineEdit = gLayout->addWidget(cpp14::make_unique<WLineEdit>(),0,1,AlignmentFlag::Center);
+        Sandik::Sandik filter;
+        filter.setTelefon(mapList["telefon"]);
 
-    gLayout->addWidget(cpp14::make_unique<WText>("Mahalle"),1,0,AlignmentFlag::Center);
-    auto mahalleLineEdit = gLayout->addWidget(cpp14::make_unique<WLineEdit>(),1,1,AlignmentFlag::Center);
+        mSandikManagerWidget->UpdateList(filter);
 
-    gLayout->addWidget(cpp14::make_unique<WText>("Sandık No"),2,0,AlignmentFlag::Center);
-    auto sandikNoSpinNox = gLayout->addWidget(cpp14::make_unique<WSpinBox>(),2,1,AlignmentFlag::Center);
+//        mSandikManagerWidget->mTimer->start();
 
-    gLayout->addWidget(cpp14::make_unique<WText>("İlgili Telefon"),3,0,AlignmentFlag::Center);
-    auto telefonNoEdit = gLayout->addWidget(cpp14::make_unique<WLineEdit>(),3,1,AlignmentFlag::Center);
+    }else{
 
-    mDialog->Accepted().connect([=](){
+        mSandikManagerWidget = root()->addNew<Sandik::ListItemWidget>(true);
 
-//        Sandik::Sandik item;
-//        item.setSandikAlanAdi(alanAdiLineEdit->text().toUTF8());
-//        item.setMahalle(mahalleLineEdit->text().toUTF8());
-//        item.setSandikNo(sandikNoSpinNox->value());
-//        item.setTelefon(telefonNoEdit->text().toUTF8());
+        mSandikManagerWidget->addStyleClass(Bootstrap::Grid::col_full_12);
+        mSandikManagerWidget->setMargin(10,Wt::Side::Top);
+        mSandikManagerWidget->setLimit(500);
 
-//        auto ins = mSandikManagerWidget->InsertItem(item);
-//        if( ins.size() ){
-//            mSandikManagerWidget->removeDialog(mDialog);
-//            mSandikManagerWidget->UpdateList();
-//        }else{
+        mSandikManagerWidget->_Changed.connect(mTotalVoteWidget,&TotalVoteWidget::updatePercent);
 
-//        }
 
-    });
-    mDialog->show();
+        mSandikManagerWidget->mTimer->start();
+
+
+
+        auto controllerWidget = root()->addNew<ControllerWidget>();
+        controllerWidget->addStyleClass(Bootstrap::Grid::col_full_12);
+        controllerWidget->mStopAutoChangeButton->clicked().connect([=](){
+            if( controllerWidget->mStopAutoChangeButton->text() == "Durdur" ){
+                controllerWidget->mStopAutoChangeButton->setText("Kaydır");
+                mSandikManagerWidget->mAutoChange = false;
+            }else{
+                controllerWidget->mStopAutoChangeButton->setText("Durdur");
+                mSandikManagerWidget->mAutoChange = true;
+            }
+
+        });
+
+        controllerWidget->mNextButton->clicked().connect([=](){
+            mSandikManagerWidget->Sayac = 0;
+            mSandikManagerWidget->mSkip += 25;
+            if( mSandikManagerWidget->mSkip > mSandikManagerWidget->mMahalleler.size() ) mSandikManagerWidget->mSkip = 0;
+            mSandikManagerWidget->UpdateList();
+
+        });
+
+
+
+    }
+
 
 
 

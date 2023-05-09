@@ -185,7 +185,7 @@ namespace Style {
             [[maybe_unused]] inline const std::string rgb(int r , int g , int b ){return std::string{ "background-color:rgb(" +std::to_string(r)+","+std::to_string(g)+","+std::to_string(b)+");" };};
             [[maybe_unused]] inline const std::string rgba(int r , int g , int b , double a = 0.5 ){return std::string{ "background-color:rgba(" +std::to_string(r)+","+std::to_string(g)+","+std::to_string(b)+","+std::to_string(a)+");" };};
             [[maybe_unused]] inline const std::string rgba(const std::string& rgba){return std::string{"background-color:rgba("+rgba+");"};};
-            [[maybe_unused]] inline const std::string color(const std::string& color){return std::string{"background-color:"+color};};
+            [[maybe_unused]] inline const std::string color(const std::string& color){return std::string{"background-color:"+color+";"};};
         }
 
         namespace size {

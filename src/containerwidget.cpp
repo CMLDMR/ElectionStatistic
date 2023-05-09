@@ -4,6 +4,9 @@
 #include "src/inlinestyle.h"
 #include "src/bootstrap.h"
 
+#include <random>
+
+
 #include <Wt/WHBoxLayout.h>
 #include <Wt/WVBoxLayout.h>
 #include <Wt/WText.h>
@@ -23,7 +26,7 @@ DialogContainerWidget *ContainerWidget::createFlatDialog(const std::string &titl
     container->setPositionScheme(PositionScheme::Fixed);
     container->setWidth(WLength("100%"));
     container->setHeight(WLength("100%"));
-//    container->addStyleClass(CSSStyle::NewDialog::newDialog);
+    container->addStyleClass("newDialog");
     container->setContentAlignment(AlignmentFlag::Center);
 
     if( autoDel ){
@@ -41,6 +44,15 @@ void ContainerWidget::removeDialog(DialogContainerWidget *removedContainer)
 {
     WApplication::instance()->root()->removeWidget(removedContainer);
 
+}
+
+int ContainerWidget::getRandom(const int &min, const int &max)
+{
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<int> dist(min, max);
+
+    return dist(mt);
 }
 
 

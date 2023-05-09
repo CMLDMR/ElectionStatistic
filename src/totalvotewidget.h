@@ -23,6 +23,7 @@ public:
 
     TotalItemWidget* addVoteWidget( const std::string &imgUrl , const std::string &name , const std::string &barColor );
 
+    void updatePercent();
 };
 
 
