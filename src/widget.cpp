@@ -462,8 +462,13 @@ void MahalleWidget::setVoteRate(const int &rte, const int &mi, const int &kk, co
         streamObj3 << std::fixed;
         streamObj3 << std::setprecision(2);
         streamObj3 << percent;
-        std::string strObj3 = streamObj3.str();
-        return strObj3;
+        if( percent != percent ){
+            return std::string("0");
+        }else{
+            std::string strObj3 = streamObj3.str();
+            return strObj3;
+        }
+
     };
 
     rteText->setText(WString("<b>{1}%</b>").arg(percent(static_cast<double>(rte)/total*100)));

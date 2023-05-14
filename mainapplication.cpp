@@ -107,7 +107,7 @@ MainApplication::MainApplication(const Wt::WEnvironment &env)
         });
 
         mTimer = addChild(std::make_unique<Wt::WTimer>());
-        mTimer->setInterval(std::chrono::seconds(1));
+        mTimer->setInterval(std::chrono::seconds(10));
         mTimer->timeout().connect(this, [=](){
 
             mSandikManagerWidget->Sayac++;

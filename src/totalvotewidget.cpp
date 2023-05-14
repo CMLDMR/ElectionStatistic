@@ -7,13 +7,20 @@
 #include "bootstrap.h"
 #include "widget.h"
 #include "db.h"
-
+#include "inlinestyle.h"
 
 
 using namespace Wt;
 
 TotalVoteWidget::TotalVoteWidget()
 {
+
+    auto logoContainer = this->addWidget(std::make_unique<WContainerWidget>());
+    logoContainer->addStyleClass(Bootstrap::Grid::col_full_12);
+    logoContainer->setHeight(50);
+    logoContainer->setAttributeValue(Style::style,Style::background::url("logo.png")+Style::background::position::center_center+Style::background::repeat::norepeat+Style::background::size::contain);
+
+
     auto title = this->addWidget(cpp14::make_unique<WText>("<b>Ak Parti Serik İlçe Teşkilatı(Cumhurbaşkanlığı Serik Sonuçları)</b>"));
     title->addStyleClass(Bootstrap::Grid::col_full_12);
     this->setContentAlignment(AlignmentFlag::Center);
@@ -65,6 +72,7 @@ void TotalVoteWidget::updatePercent()
         }
         total = rte + mi + kk + so + diger;
     }
+//    total = total <= 0 ?
 
     mRTEWidget->setPercent(rte/total*100);
     mMIWidget->setPercent(mi/total*100);
