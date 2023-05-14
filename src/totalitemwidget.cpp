@@ -79,6 +79,11 @@ void TotalItemWidget::setPercent(const double &barPercent)
     // Get string from output string stream
     std::string strObj3 = streamObj3.str();
 
-    mPercentText->setText(WString("<h4><b>{1}%</b></h4>").arg(strObj3));
+    if( barPercent != barPercent ){
+        mPercentText->setText(WString("<h4><b>0</b></h4>"));
+    }else{
+        mPercentText->setText(WString("<h4><b>{1}%</b></h4>").arg(strObj3));
+    }
+
 }
 

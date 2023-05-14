@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
 
-set(bsoncxx_DIR C:/Mongo/mongo-msvc2022x64-noBoost/lib/cmake/bsoncxx-3.7.0)
-set(mongocxx_DIR C:/Mongo/mongo-msvc2022x64-noBoost/lib/cmake/mongocxx-3.7.0)
+set(bsoncxx_DIR ../mongocore/lib/cmake/bsoncxx-3.7.0)
+set(mongocxx_DIR ../mongocore/lib/cmake/mongocxx-3.7.0)
 
 #find_package(Qt6 6.2 COMPONENTS Core Gui Xml Widgets REQUIRED)
 

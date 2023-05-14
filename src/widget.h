@@ -114,15 +114,12 @@ public:
 
     std::vector<MahalleWidget*> mMahalleWidgetList;
 
-
     std::set<std::string> mMahalleler;
 
     int mSkip = 0;
 
     int Sayac{0};
     bool mAutoChange{true};
-
-    Wt::WTimer* mTimer;
 
     WContainerWidget* mContent;
 
