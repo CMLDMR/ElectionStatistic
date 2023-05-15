@@ -35,10 +35,9 @@ DialogContainerWidget *ContainerWidget::createFlatDialog(const std::string &titl
         });
     }
 
-
-
     return container;
 }
+
 
 void ContainerWidget::removeDialog(DialogContainerWidget *removedContainer)
 {

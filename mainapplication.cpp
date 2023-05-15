@@ -98,24 +98,37 @@ MainApplication::MainApplication(const Wt::WEnvironment &env)
 
         });
 
+        controllerWidget->mBackButton->clicked().connect([=](){
+            mSandikManagerWidget->Sayac = 0;
+            mSandikManagerWidget->mSkip -= 20;
+            if( mSandikManagerWidget->mSkip < 0 ){
+                mSandikManagerWidget->mSkip = mSandikManagerWidget->mMahalleler.size()-20;
+            }
+
+            if( mSandikManagerWidget->mSkip > mSandikManagerWidget->mMahalleler.size() ) mSandikManagerWidget->mSkip = 0;
+            mSandikManagerWidget->UpdateList();
+
+        });
+
         controllerWidget->mNextButton->clicked().connect([=](){
             mSandikManagerWidget->Sayac = 0;
-            mSandikManagerWidget->mSkip += 25;
+            mSandikManagerWidget->mSkip += 20;
             if( mSandikManagerWidget->mSkip > mSandikManagerWidget->mMahalleler.size() ) mSandikManagerWidget->mSkip = 0;
             mSandikManagerWidget->UpdateList();
 
         });
 
         mTimer = addChild(std::make_unique<Wt::WTimer>());
-        mTimer->setInterval(std::chrono::seconds(10));
+        mTimer->setInterval(std::chrono::seconds(1));
         mTimer->timeout().connect(this, [=](){
 
             mSandikManagerWidget->Sayac++;
 
             if( mSandikManagerWidget->Sayac >=3 && mSandikManagerWidget->mAutoChange ){
                 mSandikManagerWidget->Sayac = 0;
-                mSandikManagerWidget->mSkip += 25;
-                if( mSandikManagerWidget->mSkip > mSandikManagerWidget->mMahalleler.size() ) mSandikManagerWidget->mSkip = 0;
+                mSandikManagerWidget->mSkip += 20;
+                std::cout << "New Pahe\n";
+                if( mSandikManagerWidget->mSkip >= mSandikManagerWidget->mMahalleler.size() ) mSandikManagerWidget->mSkip = 0;
 
                 if( mSandikManagerWidget->mTelefonNumarasi.size() ){
 
@@ -126,7 +139,7 @@ MainApplication::MainApplication(const Wt::WEnvironment &env)
             }
 
         });
-        mTimer->start();
+//        mTimer->start();
 
 
 

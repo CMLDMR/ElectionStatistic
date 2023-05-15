@@ -13,6 +13,10 @@ ControllerWidget::ControllerWidget()
 
     mLayout->addStretch(1);
 
+    mBackButton = mLayout->addWidget(cpp14::make_unique<WPushButton>("Geri"));
+
+                  mLayout->addStretch(1);
+
     mStopAutoChangeButton = mLayout->addWidget(cpp14::make_unique<WPushButton>("Durdur"));
     mLayout->addStretch(1);
 

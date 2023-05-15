@@ -78,7 +78,6 @@ public:
     MahalleWidget(const std::string &mahalleName);
 
     WContainerWidget* mContent;
-
     std::tuple<WContainerWidget*,WText*> addBar( const std::string &color);
 
     void setVoteRate(const int &rte, const int &mi, const int &kk , const int &so , const int &diger);
@@ -122,6 +121,8 @@ public:
     bool mAutoChange{true};
 
     WContainerWidget* mContent;
+    WContainerWidget* mHeader;
+
 
     // DB interface
 public:

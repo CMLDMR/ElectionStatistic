@@ -15,6 +15,7 @@ public:
     ContainerWidget();
 
     DialogContainerWidget *createFlatDialog(const std::string &title = "" , const bool &autoDel = true);
+
     void removeDialog(DialogContainerWidget *removedContainer );
 
     int getRandom( const int &min = 0, const int &max = 100 );

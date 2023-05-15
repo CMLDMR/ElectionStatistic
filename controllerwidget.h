@@ -15,6 +15,7 @@ public:
 
     WPushButton* mStopAutoChangeButton;
     WPushButton* mNextButton;
+    WPushButton* mBackButton;
 
 private:
     WHBoxLayout* mLayout;
