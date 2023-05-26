@@ -14,7 +14,7 @@ class TotalItemWidget;
 class TotalVoteWidget : public Wt::WContainerWidget
 {
 public:
-    TotalVoteWidget();
+    TotalVoteWidget(MongoCore::DB* _db);
 
     TotalItemWidget* mRTEWidget;
     TotalItemWidget* mMIWidget;
@@ -27,6 +27,8 @@ public:
     TotalItemWidget* addVoteWidget( const std::string &imgUrl , const std::string &name , const std::string &barColor );
 
     void updatePercent();
+
+    MongoCore::DB* mDB;
 
 };
 

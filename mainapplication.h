@@ -48,7 +48,12 @@ private:
                                                 {"05063347123","ŞK"},
                                                 };
 
+    void privatePanel(const std::string &panel);
+    void publicPanel();
     Wt::WTimer* mTimer;
+
+    void selectMahalle(const std::string &mahalle);
+
 
 };
 

@@ -12,7 +12,7 @@
 #include "src/containerwidget.h"
 
 
-#include "magic/magic_enum.hpp"
+
 
 
 namespace Sandik {
@@ -100,7 +100,7 @@ public:
 class ListItemWidget : public MongoCore::ListItem<Sandik>, public ContainerWidget
 {
 public:
-    ListItemWidget(const bool &listByMahalle = false);
+    ListItemWidget(DB *db, const bool &listByMahalle = false);
 
     void setSandikValue(const Widget *oldItem);
 
@@ -112,19 +112,18 @@ public:
 
     bool mListByMahalle{false};
 
-    std::vector<MahalleWidget*> mMahalleWidgetList;
-
     std::set<std::string> mMahalleler;
 
     int mSkip = 0;
 
-    int Sayac{0};
     bool mAutoChange{true};
 
     WContainerWidget* mContent;
     WContainerWidget* mHeader;
 
     Signal<std::string> _MahalleClicked;
+
+
 
 
 

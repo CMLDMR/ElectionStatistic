@@ -12,7 +12,8 @@
 
 using namespace Wt;
 
-TotalVoteWidget::TotalVoteWidget()
+TotalVoteWidget::TotalVoteWidget(MongoCore::DB *_db)
+    :mDB(_db)
 {
 
     auto logoContainer = this->addWidget(std::make_unique<WContainerWidget>());
@@ -69,8 +70,12 @@ void TotalVoteWidget::updatePercent()
 {
 
 
+    if( !mDB ){
+        std::cout << "\nMongo DB Error: NO DB\n";
+    }
     Sandik::Sandik filter;
-    auto list = Global::DB::instance()->find(filter,1000);
+
+    auto list = mDB->find(filter,1000);
 
     double rte{0};
     double mi{0};
