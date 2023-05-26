@@ -194,11 +194,11 @@ Widget::Widget(const Sandik &sandik)
 
     container->addNew<WText>(" <b>RTE: "+std::to_string(this->getRTE()) + "</b>");
 
-    container->addNew<WText>(" <b>MI: "+std::to_string(this->getMI()) + "</b>");
+//    container->addNew<WText>(" <b>MI: "+std::to_string(this->getMI()) + "</b>");
 
     container->addNew<WText>(" <b>KK: "+std::to_string(this->getKK()) + "</b>");
 
-    container->addNew<WText>(" <b>SO: "+std::to_string(this->getSO()) + "</b>");
+//    container->addNew<WText>(" <b>SO: "+std::to_string(this->getSO()) + "</b>");
 
     container->addNew<WText>(" <b>Diger: "+std::to_string(this->getDiger()) + "</b>");
 
@@ -234,17 +234,17 @@ void ListItemWidget::setSandikValue(const Widget *oldItem)
     rteVote->setValue(oldItem->getRTE());
 
 
-    gLayout->addWidget(cpp14::make_unique<WText>("Muharrem INCE"),1,0,AlignmentFlag::Center);
-    auto miVote = gLayout->addWidget(cpp14::make_unique<WSpinBox>(),1,1,AlignmentFlag::Center);
-    miVote->setValue(oldItem->getMI());
+//    gLayout->addWidget(cpp14::make_unique<WText>("Muharrem INCE"),1,0,AlignmentFlag::Center);
+//    auto miVote = gLayout->addWidget(cpp14::make_unique<WSpinBox>(),1,1,AlignmentFlag::Center);
+//    miVote->setValue(oldItem->getMI());
 
     gLayout->addWidget(cpp14::make_unique<WText>("Kemal KILIÇDAROĞLU"),2,0,AlignmentFlag::Center);
     auto kkVote = gLayout->addWidget(cpp14::make_unique<WSpinBox>(),2,1,AlignmentFlag::Center);
     kkVote->setValue(oldItem->getKK());
 
-    gLayout->addWidget(cpp14::make_unique<WText>("Sinan OĞAN"),3,0,AlignmentFlag::Center);
-    auto soVote = gLayout->addWidget(cpp14::make_unique<WSpinBox>(),3,1,AlignmentFlag::Center);
-    soVote->setValue(oldItem->getSO());
+//    gLayout->addWidget(cpp14::make_unique<WText>("Sinan OĞAN"),3,0,AlignmentFlag::Center);
+//    auto soVote = gLayout->addWidget(cpp14::make_unique<WSpinBox>(),3,1,AlignmentFlag::Center);
+//    soVote->setValue(oldItem->getSO());
 
     gLayout->addWidget(cpp14::make_unique<WText>("Diğer"),4,0,AlignmentFlag::Center);
     auto digerVote = gLayout->addWidget(cpp14::make_unique<WSpinBox>(),4,1,AlignmentFlag::Center);
@@ -257,8 +257,8 @@ void ListItemWidget::setSandikValue(const Widget *oldItem)
 
         item.setkk(kkVote->value());
         item.setrte(rteVote->value());
-        item.setmi(miVote->value());
-        item.setso(soVote->value());
+//        item.setmi(miVote->value());
+//        item.setso(soVote->value());
         item.setDiger(digerVote->value());
 
         if( this->UpdateItem(item) ){
@@ -301,83 +301,21 @@ void ListItemWidget::ListByMahalle(const std::vector<Sandik> &mlist)
             for( const auto &_item : mlist ){
                 if( _item.getMahalle() == item ){
                     rte += (_item.getRTE());
-                    mi += (_item.getMI());
+//                    mi += (_item.getMI());
                     kk += (_item.getKK());
-                    so += (_item.getSO());
+//                    so += (_item.getSO());
                     diger += (_item.getDiger());
                 }
             }
             mahalleWidget->setVoteRate(rte,mi,kk,so,diger);
 //            mahalleWidget->setVoteRate(getRandom(),getRandom(),getRandom(),getRandom(),getRandom());
 
-//            mahalleWidget->clicked().connect([=](){
-//                mAutoChange = false;
-//                auto mDialog = createFlatDialog(mahalleWidget->mMahalleName);
-//                auto content = mDialog->Content()->addWidget(cpp14::make_unique<WContainerWidget>());
-//                content->addStyleClass(Bootstrap::Grid::col_full_12);
-//                Sandik filter;
-//                filter.setMahalle(mahalleWidget->mMahalleName);
+            mahalleWidget->clicked().connect([=](){
 
-//                MongoCore::FindOptions options;
-//                options.setLimit(400);
-
-//                auto list = this->List(filter,options);
-
-//                auto gLayout = content->setLayout(cpp14::make_unique<WGridLayout>());
-
-//                gLayout->addWidget(cpp14::make_unique<WText>("<b>Sandık</b>"),0,0,AlignmentFlag::Left);
-//                gLayout->addWidget(cpp14::make_unique<WText>("<b>Recep Tayyip ERDOĞAN</b>"),0,1,AlignmentFlag::Center);
-//                gLayout->addWidget(cpp14::make_unique<WText>("<b>Muharren İNCE</b>"),0,2,AlignmentFlag::Center);
-//                gLayout->addWidget(cpp14::make_unique<WText>("<b>Kemal KILIÇDAROĞLU</b>"),0,3,AlignmentFlag::Center);
-//                gLayout->addWidget(cpp14::make_unique<WText>("<b>Sinan OĞAN</b>"),0,4,AlignmentFlag::Center);
-//                gLayout->addWidget(cpp14::make_unique<WText>("<b>Diğer</b>"),0,5,AlignmentFlag::Center);
-
-//                    int RTE{0};
-//                    int MI{0};
-//                    int KK{0};
-//                    int SO{0};
-//                    int DIGER{0};
-
-//                int i = 1 ;
-//                for( const auto &mahalleItem : list ){
-//                    gLayout->addWidget(cpp14::make_unique<WText>(std::to_string(mahalleItem.getSandikNo())),i,0,AlignmentFlag::Left);
-//                    gLayout->addWidget(cpp14::make_unique<WText>(std::to_string(mahalleItem.getRTE())),i,1,AlignmentFlag::Center);
-//                    gLayout->addWidget(cpp14::make_unique<WText>(std::to_string(mahalleItem.getMI())),i,2,AlignmentFlag::Center);
-//                    gLayout->addWidget(cpp14::make_unique<WText>(std::to_string(mahalleItem.getKK())),i,3,AlignmentFlag::Center);
-//                    gLayout->addWidget(cpp14::make_unique<WText>(std::to_string(mahalleItem.getSO())),i,4,AlignmentFlag::Center);
-//                    gLayout->addWidget(cpp14::make_unique<WText>(std::to_string(mahalleItem.getDiger())),i,5,AlignmentFlag::Center);
-//                    i++;
-
-//                    RTE += mahalleItem.getRTE();
-//                    MI += mahalleItem.getMI();
-//                    KK += mahalleItem.getKK();
-//                    SO += mahalleItem.getSO();
-//                    DIGER += mahalleItem.getDiger();
-//                }
+                _MahalleClicked.emit(mahalleWidget->mMahalleName);
 
 
-//                gLayout->addWidget(cpp14::make_unique<WText>("<b>Toplam</b>"),i,0,AlignmentFlag::Left);
-//                gLayout->addWidget(cpp14::make_unique<WText>("<b>"+std::to_string(RTE)+"</b>"),i,1,AlignmentFlag::Center);
-//                gLayout->addWidget(cpp14::make_unique<WText>("<b>"+std::to_string(MI)+"</b>"),i,2,AlignmentFlag::Center);
-//                gLayout->addWidget(cpp14::make_unique<WText>("<b>"+std::to_string(KK)+"</b>"),i,3,AlignmentFlag::Center);
-//                gLayout->addWidget(cpp14::make_unique<WText>("<b>"+std::to_string(SO)+"</b>"),i,4,AlignmentFlag::Center);
-//                gLayout->addWidget(cpp14::make_unique<WText>("<b>"+std::to_string(DIGER)+"</b>"),i,5,AlignmentFlag::Center);
-
-
-
-//                mDialog->Rejected().connect([=](){
-//                    if( mDialog == NULL ){
-//                        std::cout << "Dialog Does Not Exist\n";
-//                    }else{
-//                        std::cout << "Dilod \n";
-//                        removeDialog(mDialog);
-//                    }
-
-//                });
-
-//                mDialog->show();
-
-//            });
+            });
         }
         i++;
     }
@@ -402,7 +340,7 @@ MahalleWidget::MahalleWidget( const std::string &mahalleName )
 
     mContent->setAttributeValue(Style::style,Style::background::color::rgb(240,240,240));
     mContent->setMargin(3,Side::Bottom);
-    mContent->setHeight(100);
+    mContent->setHeight(60);
 
     {
         auto [container,text] = addBar("orange");
@@ -411,27 +349,27 @@ MahalleWidget::MahalleWidget( const std::string &mahalleName )
         rteWidgetBar->setOffsets(20,Side::Top);
     }
 
-    {
-        auto [container,text] = addBar("lightblue");
-        miWidgetBar = container;
-        miText = text;
-        miWidgetBar->setOffsets(40,Side::Top);
-    }
+//    {
+//        auto [container,text] = addBar("lightblue");
+//        miWidgetBar = container;
+//        miText = text;
+//        miWidgetBar->setOffsets(40,Side::Top);
+//    }
 
 
     {
         auto [container,text] = addBar("red");
         kkWidgetBar = container;
         kkText = text;
-        kkWidgetBar->setOffsets(60,Side::Top);
+        kkWidgetBar->setOffsets(40,Side::Top);
     }
 
-    {
-        auto [container,text] = addBar("CornflowerBlue");
-        soWidgetBar = container;
-        soText = text;
-        soWidgetBar->setOffsets(80,Side::Top);
-    }
+//    {
+//        auto [container,text] = addBar("CornflowerBlue");
+//        soWidgetBar = container;
+//        soText = text;
+//        soWidgetBar->setOffsets(80,Side::Top);
+//    }
 
 }
 
@@ -456,9 +394,9 @@ void MahalleWidget::setVoteRate(const int &rte, const int &mi, const int &kk, co
     auto soP = static_cast<double>(so)/total*100.;
 
     rteWidgetBar->setWidth(WLength(WString("{1}%").arg(rteP).toUTF8()));
-    miWidgetBar->setWidth(WLength(WString("{1}%").arg(miP).toUTF8()));
+//    miWidgetBar->setWidth(WLength(WString("{1}%").arg(miP).toUTF8()));
     kkWidgetBar->setWidth(WLength(WString("{1}%").arg(kkP).toUTF8()));
-    soWidgetBar->setWidth(WLength(WString("{1}%").arg(soP).toUTF8()));
+//    soWidgetBar->setWidth(WLength(WString("{1}%").arg(soP).toUTF8()));
 
 
     auto percent = []( const double percent ){
@@ -477,9 +415,9 @@ void MahalleWidget::setVoteRate(const int &rte, const int &mi, const int &kk, co
     };
 
     rteText->setText(WString("<b>{1}</b>").arg(percent(static_cast<double>(rte))));
-    miText->setText(WString("<b>{1}</b>").arg(percent(static_cast<double>(mi))));
+//    miText->setText(WString("<b>{1}</b>").arg(percent(static_cast<double>(mi))));
     kkText->setText(WString("<b>{1}</b>").arg(percent(static_cast<double>(kk))));
-    soText->setText(WString("<b>{1}</b>").arg(percent(static_cast<double>(so))));
+//    soText->setText(WString("<b>{1}</b>").arg(percent(static_cast<double>(so))));
 
 }
 

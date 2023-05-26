@@ -18,7 +18,7 @@
 namespace Sandik {
 
 namespace Key {
-inline const std::string SandikCollection{"SandikCollection"};
+inline const std::string SandikCollection{"ikiciTur"};
 inline const std::string sandikno{"sandikno"};
 inline const std::string mahalle{"mahalle"};
 inline const std::string sandikAlanadi{"sandikAlanadi"};
@@ -82,16 +82,17 @@ public:
 
     void setVoteRate(const int &rte, const int &mi, const int &kk , const int &so , const int &diger);
     WContainerWidget* rteWidgetBar;
-    WContainerWidget* miWidgetBar;
+//    WContainerWidget* miWidgetBar;
     WContainerWidget* kkWidgetBar;
-    WContainerWidget* soWidgetBar;
+//    WContainerWidget* soWidgetBar;
 
     WText* rteText;
-    WText* miText;
+//    WText* miText;
     WText* kkText;
-    WText* soText;
+//    WText* soText;
 
     std::string mMahalleName{};
+
 };
 
 
@@ -122,6 +123,9 @@ public:
 
     WContainerWidget* mContent;
     WContainerWidget* mHeader;
+
+    Signal<std::string> _MahalleClicked;
+
 
 
     // DB interface
