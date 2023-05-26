@@ -21,9 +21,13 @@ public:
     TotalItemWidget* mKKWidget;
     TotalItemWidget* mSOWidget;
 
+    Wt::WContainerWidget* mPercentWidget;
+    Wt::WText* mPercentText;
+
     TotalItemWidget* addVoteWidget( const std::string &imgUrl , const std::string &name , const std::string &barColor );
 
     void updatePercent();
+
 };
 
 
