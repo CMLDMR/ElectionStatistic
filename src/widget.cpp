@@ -207,8 +207,8 @@ Widget::Widget(const Sandik &sandik)
 
 }
 
-ListItemWidget::ListItemWidget(const bool &listByMahalle)
-    :MongoCore::ListItem<Sandik>(Global::DB::instance())
+ListItemWidget::ListItemWidget(MongoCore::DB* db, const bool &listByMahalle)
+    :MongoCore::ListItem<Sandik>(db)
 {
     mListByMahalle = listByMahalle;
     this->addStyleClass(Bootstrap::Grid::col_full_12);
@@ -283,6 +283,8 @@ void ListItemWidget::setSandikValue(const Widget *oldItem)
 
 void ListItemWidget::ListByMahalle(const std::vector<Sandik> &mlist)
 {
+    std::cout << "ListByMahalle " << std::boolalpha << mAutoChange << "\n";
+    if( !mAutoChange ) return;
 
     mContent->clear();
     if( !mMahalleler.size() ){
@@ -291,7 +293,7 @@ void ListItemWidget::ListByMahalle(const std::vector<Sandik> &mlist)
         }
     }
 
-    int i = 0;
+    int i = mSkip;
     for( const auto &item : mMahalleler ){
 
         if( i >= mSkip && i < mSkip + 20 ){
@@ -311,10 +313,8 @@ void ListItemWidget::ListByMahalle(const std::vector<Sandik> &mlist)
 //            mahalleWidget->setVoteRate(getRandom(),getRandom(),getRandom(),getRandom(),getRandom());
 
             mahalleWidget->clicked().connect([=](){
-
+                mAutoChange = false;
                 _MahalleClicked.emit(mahalleWidget->mMahalleName);
-
-
             });
         }
         i++;
@@ -427,7 +427,7 @@ void MahalleWidget::setVoteRate(const int &rte, const int &mi, const int &kk, co
 
 void Sandik::ListItemWidget::errorOccured(const std::string &errorText)
 {
-    std::cout << "Can Not Update: " << errorText <<"\n";
+    std::cout << "Can Not Update: ---- " << errorText <<"\n";
 
 }
 

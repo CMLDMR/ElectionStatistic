@@ -19,8 +19,8 @@ void DB::setDB(MongoCore::DB *__mDB)
 {
     std::call_once(mDBCallOnceFlag,[=](){
         mDB = new DB();
+        mDB->_mDB = __mDB;
     });
-    mDB->_mDB = __mDB;
 }
 
 DB::DB()

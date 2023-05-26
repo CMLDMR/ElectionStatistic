@@ -45,8 +45,7 @@ MainApplication::MainApplication(const Wt::WEnvironment &env)
 
     WApplication::useStyleSheet(WLink("newDialog.css"));
 
-    mTotalVoteWidget = root()->addNew<TotalVoteWidget>();
-    mTotalVoteWidget->addStyleClass(Bootstrap::Grid::col_full_12);
+
 
     std::map<std::string,std::string> mapList;
     for (const auto &str : env.getParameterMap() ) {
@@ -57,34 +56,127 @@ MainApplication::MainApplication(const Wt::WEnvironment &env)
     }
 
     if( mapList.contains("telefon") ){
-
-        mSandikManagerWidget = root()->addNew<Sandik::ListItemWidget>();
-        mSandikManagerWidget->mTelefonNumarasi = mapList["telefon"];
-
-        mSandikManagerWidget->addStyleClass(Bootstrap::Grid::col_full_12);
-        mSandikManagerWidget->setMargin(10,Wt::Side::Top);
-        mSandikManagerWidget->setLimit(500);
-
-        mSandikManagerWidget->_Changed.connect(mTotalVoteWidget,&TotalVoteWidget::updatePercent);
-
-        Sandik::Sandik filter;
-        filter.setTelefon(mapList["telefon"]);
-
-        mSandikManagerWidget->UpdateList(filter);
-
+        this->privatePanel(mapList["telefon"]);
     }else{
+        this->publicPanel();
+    }
 
-        mSandikManagerWidget = root()->addNew<Sandik::ListItemWidget>(true);
+
+
+
+
+
+
+}
+
+void MainApplication::privatePanel( const std::string &panel )
+{
+    mSandikManagerWidget = root()->addNew<Sandik::ListItemWidget>(mDB);
+    mSandikManagerWidget->mTelefonNumarasi = panel;
+
+    mSandikManagerWidget->addStyleClass(Bootstrap::Grid::col_full_12);
+    mSandikManagerWidget->setMargin(10,Wt::Side::Top);
+    mSandikManagerWidget->setLimit(500);
+
+//    mSandikManagerWidget->_Changed.connect(mTotalVoteWidget,&TotalVoteWidget::updatePercent);
+
+    Sandik::Sandik filter;
+    filter.setTelefon(panel);
+
+    mSandikManagerWidget->UpdateList(filter);
+}
+
+void MainApplication::publicPanel()
+{
+
+    mTotalVoteWidget = root()->addNew<TotalVoteWidget>(mDB);
+    mTotalVoteWidget->addStyleClass(Bootstrap::Grid::col_full_12);
+
+
+        mSandikManagerWidget = root()->addNew<Sandik::ListItemWidget>(mDB,true);
 
         mSandikManagerWidget->addStyleClass(Bootstrap::Grid::col_full_12);
         mSandikManagerWidget->setMargin(10,Wt::Side::Top);
         mSandikManagerWidget->setLimit(500);
+        mSandikManagerWidget->setSkip(0);
+
+
+
         mSandikManagerWidget->UpdateList();
 
 
-        mSandikManagerWidget->_MahalleClicked.connect([=](const std::string &mahalle){
+        mSandikManagerWidget->_MahalleClicked.connect(this,&MainApplication::selectMahalle);
 
 
+
+        mSandikManagerWidget->_Changed.connect(mTotalVoteWidget,&TotalVoteWidget::updatePercent);
+
+        auto controllerWidget = root()->addNew<ControllerWidget>();
+        controllerWidget->addStyleClass(Bootstrap::Grid::col_full_12);
+        controllerWidget->mStopAutoChangeButton->clicked().connect([=](){
+            if( controllerWidget->mStopAutoChangeButton->text() == "Durdur" ){
+                controllerWidget->mStopAutoChangeButton->setText("Kaydır");
+                mSandikManagerWidget->mAutoChange = false;
+                mTimer->stop();
+            }else{
+                controllerWidget->mStopAutoChangeButton->setText("Durdur");
+                mSandikManagerWidget->mAutoChange = true;
+                mTimer->start();
+            }
+
+        });
+
+        controllerWidget->mBackButton->clicked().connect([=](){
+            mSandikManagerWidget->mSkip -= 20;
+            if( mSandikManagerWidget->mSkip < 0 ){
+                mSandikManagerWidget->mSkip = mSandikManagerWidget->mMahalleler.size()-21;
+            }
+
+            if( mSandikManagerWidget->mSkip > mSandikManagerWidget->mMahalleler.size() ) mSandikManagerWidget->mSkip = 0;
+            mSandikManagerWidget->UpdateList();
+
+        });
+
+        controllerWidget->mNextButton->clicked().connect([=](){
+            mSandikManagerWidget->mSkip += 20;
+            if( mSandikManagerWidget->mSkip >= mSandikManagerWidget->mMahalleler.size() ) mSandikManagerWidget->mSkip = 0;
+            mSandikManagerWidget->UpdateList();
+
+        });
+
+        mTimer = addChild(std::make_unique<Wt::WTimer>());
+        mTimer->setInterval(std::chrono::seconds(30));
+        mTimer->timeout().connect(this, [=](){
+
+            if( !mSandikManagerWidget->mAutoChange ){
+                return;
+            }
+
+            if( mSandikManagerWidget->mAutoChange ){
+                mSandikManagerWidget->mSkip += 20;
+                if( mSandikManagerWidget->mSkip >= mSandikManagerWidget->mMahalleler.size() ) mSandikManagerWidget->mSkip = 0;
+
+                if( mSandikManagerWidget->mTelefonNumarasi.size() ){
+
+                }else{
+                    mSandikManagerWidget->UpdateList();
+                }
+
+            }
+
+            mTotalVoteWidget->updatePercent();
+
+        });
+        mTimer->start();
+
+
+
+
+
+}
+
+void MainApplication::selectMahalle(const std::string &mahalle)
+{
             auto mDialog = Wt::WApplication::instance()->root()->addNew<DialogContainerWidget>(mahalle);
             mDialog->setId("flatDialog");
             mDialog->setPositionScheme(PositionScheme::Fixed);
@@ -156,88 +248,10 @@ MainApplication::MainApplication(const Wt::WEnvironment &env)
                         std::cout << "Dilod \n";
 //                        removeDialog(mDialog);
                         Wt::WApplication::instance()->root()->removeWidget(mDialog);
-//                        mAutoChange = true;
+                        mSandikManagerWidget->mAutoChange = true;
                     }
 
                 });
 
                 mDialog->show();
-
-        });
-
-
-
-        mSandikManagerWidget->_Changed.connect(mTotalVoteWidget,&TotalVoteWidget::updatePercent);
-
-        auto controllerWidget = root()->addNew<ControllerWidget>();
-        controllerWidget->addStyleClass(Bootstrap::Grid::col_full_12);
-        controllerWidget->mStopAutoChangeButton->clicked().connect([=](){
-            if( controllerWidget->mStopAutoChangeButton->text() == "Durdur" ){
-                controllerWidget->mStopAutoChangeButton->setText("Kaydır");
-                mSandikManagerWidget->mAutoChange = false;
-                mTimer->stop();
-            }else{
-                controllerWidget->mStopAutoChangeButton->setText("Durdur");
-                mSandikManagerWidget->mAutoChange = true;
-                mTimer->start();
-            }
-
-        });
-
-        controllerWidget->mBackButton->clicked().connect([=](){
-            mSandikManagerWidget->Sayac = 0;
-            mSandikManagerWidget->mSkip -= 20;
-            if( mSandikManagerWidget->mSkip < 0 ){
-                mSandikManagerWidget->mSkip = mSandikManagerWidget->mMahalleler.size()-20;
-            }
-
-            if( mSandikManagerWidget->mSkip > mSandikManagerWidget->mMahalleler.size() ) mSandikManagerWidget->mSkip = 0;
-            mSandikManagerWidget->UpdateList();
-
-        });
-
-        controllerWidget->mNextButton->clicked().connect([=](){
-            mSandikManagerWidget->Sayac = 0;
-            mSandikManagerWidget->mSkip += 20;
-            if( mSandikManagerWidget->mSkip > mSandikManagerWidget->mMahalleler.size() ) mSandikManagerWidget->mSkip = 0;
-            mSandikManagerWidget->UpdateList();
-
-        });
-
-        mTimer = addChild(std::make_unique<Wt::WTimer>());
-        mTimer->setInterval(std::chrono::seconds(1));
-        mTimer->timeout().connect(this, [=](){
-
-            mSandikManagerWidget->Sayac++;
-
-            if( mSandikManagerWidget->Sayac >=3 && mSandikManagerWidget->mAutoChange ){
-                mSandikManagerWidget->Sayac = 0;
-                mSandikManagerWidget->mSkip += 20;
-                if( mSandikManagerWidget->mSkip >= mSandikManagerWidget->mMahalleler.size() ) mSandikManagerWidget->mSkip = 0;
-
-                if( mSandikManagerWidget->mTelefonNumarasi.size() ){
-
-                }else{
-                    mSandikManagerWidget->UpdateList();
-                }
-
-            }
-
-            mTotalVoteWidget->updatePercent();
-
-        });
-        mTimer->start();
-
-
-
-
-
-    }
-
-
-
-
-
-
-
 }
