@@ -293,7 +293,7 @@ void ListItemWidget::ListByMahalle(const std::vector<Sandik> &mlist)
         }
     }
 
-    int i = mSkip;
+    int i = 0;
     for( const auto &item : mMahalleler ){
 
         if( i >= mSkip && i < mSkip + 20 ){
